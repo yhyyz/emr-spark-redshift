@@ -88,7 +88,7 @@ private[redshift] case class RedshiftRelation(
     val creds = AWSCredentialsUtils.load(params, sqlContext.sparkContext.hadoopConfiguration)
     for (
       redshiftRegion <- Utils.getRegionForRedshiftCluster(params.jdbcUrl);
-      s3Region <- Utils.getRegionForS3Bucket(params.rootTempDir, s3ClientFactory(creds))
+      s3Region <- Utils.getRegionForS3Bucket(params.rootTempDir,params.parameters("s3_endpoint"), s3ClientFactory(creds))
     ) {
       if (redshiftRegion != s3Region) {
         // We don't currently support `extraunloadoptions`, so even if Amazon _did_ add a `region`
@@ -101,7 +101,7 @@ private[redshift] case class RedshiftRelation(
           s"this read will fail.")
       }
     }
-    Utils.checkThatBucketHasObjectLifecycleConfiguration(params.rootTempDir, s3ClientFactory(creds))
+    Utils.checkThatBucketHasObjectLifecycleConfiguration(params.rootTempDir,params.parameters("s3_endpoint"), s3ClientFactory(creds))
     if (requiredColumns.isEmpty) {
       // In the special case where no columns were requested, issue a `count(*)` against Redshift
       // rather than unloading data.
@@ -143,7 +143,7 @@ private[redshift] case class RedshiftRelation(
           Utils.fixS3Url(Utils.removeCredentialsFromURI(URI.create(tempDir)).toString)
         val s3URI = Utils.createS3URI(cleanedTempDirUri)
         val s3Client = s3ClientFactory(creds)
-        s3Client.setEndpoint("s3.cn-north-1.amazonaws.com.cn")
+        s3Client.setEndpoint(params.parameters("s3_endpoint"))
         val is = s3Client.getObject(s3URI.getBucket, s3URI.getKey + "manifest").getObjectContent
         val s3Files = try {
           val entries = Json.parse(new InputStreamReader(is)).asObject().get("entries").asArray()

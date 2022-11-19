@@ -39,7 +39,8 @@ private[redshift] object Parameters {
     "usestagingtable" -> "true",
     "preactions" -> ";",
     "postactions" -> ";",
-    "include_column_list" -> "false"
+    "include_column_list" -> "false",
+    "s3_endpoint" -> "s3.cn-north-1.amazonaws.com.cn"
   )
 
   val VALID_TEMP_FORMATS = Set("AVRO", "CSV", "CSV GZIP")

@@ -123,9 +123,10 @@ private[redshift] object Utils {
    */
   def checkThatBucketHasObjectLifecycleConfiguration(
       tempDir: String,
+      s3Endpoint: String,
       s3Client: AmazonS3Client): Unit = {
     try {
-      s3Client.setEndpoint("s3.cn-north-1.amazonaws.com.cn")
+      s3Client.setEndpoint(s3Endpoint)
       val s3URI = createS3URI(Utils.fixS3Url(tempDir))
       val bucket = s3URI.getBucket
       assert(bucket != null, "Could not get bucket from S3 URI")
@@ -175,9 +176,9 @@ private[redshift] object Utils {
   /**
    * Attempts to retrieve the region of the S3 bucket.
    */
-  def getRegionForS3Bucket(tempDir: String, s3Client: AmazonS3Client): Option[String] = {
+  def getRegionForS3Bucket(tempDir: String,s3Endpoint: String, s3Client: AmazonS3Client): Option[String] = {
     try {
-      s3Client.setEndpoint("s3.cn-north-1.amazonaws.com.cn")
+      s3Client.setEndpoint(s3Endpoint)
       val s3URI = createS3URI(Utils.fixS3Url(tempDir))
       val bucket = s3URI.getBucket
       assert(bucket != null, "Could not get bucket from S3 URI")

@@ -361,7 +361,7 @@ private[redshift] class RedshiftWriter(
 
     for (
       redshiftRegion <- Utils.getRegionForRedshiftCluster(params.jdbcUrl);
-      s3Region <- Utils.getRegionForS3Bucket(params.rootTempDir, s3ClientFactory(creds))
+      s3Region <- Utils.getRegionForS3Bucket(params.rootTempDir, params.parameters("s3_endpoint"),s3ClientFactory(creds))
     ) {
      val regionIsSetInExtraCopyOptions =
        params.extraCopyOptions.contains(s3Region) && params.extraCopyOptions.contains("region")
@@ -394,7 +394,7 @@ private[redshift] class RedshiftWriter(
     Utils.assertThatFileSystemIsNotS3BlockFileSystem(
       new URI(params.rootTempDir), sqlContext.sparkContext.hadoopConfiguration)
 
-    Utils.checkThatBucketHasObjectLifecycleConfiguration(params.rootTempDir, s3ClientFactory(creds))
+    Utils.checkThatBucketHasObjectLifecycleConfiguration(params.rootTempDir,params.parameters("s3_endpoint"), s3ClientFactory(creds))
 
     // Save the table's rows to S3:
     val manifestUrl = unloadData(
