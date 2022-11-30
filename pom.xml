@@ -20,14 +20,14 @@
 
 
     <properties>
-        <scala.version>2.11.12</scala.version>
+        <scala.version>2.12.12</scala.version>
         <play-json.version>2.3.9</play-json.version>
         <maven-scala-plugin.version>2.10.1</maven-scala-plugin.version>
         <scala-maven-plugin.version>3.2.0</scala-maven-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-        <spark.version>2.4.7</spark.version>
+        <spark.version>3.2.1</spark.version>
         <scope.type>provided</scope.type>
-        <scala.binary.version>2.11</scala.binary.version>
+        <scala.binary.version>2.12</scala.binary.version>
         <jar.version>1.0</jar.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

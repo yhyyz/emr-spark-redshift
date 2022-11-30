@@ -135,32 +135,32 @@ private[redshift] object Conversions {
     val converted: Array[Any] = Array.fill(schema.length)(null)
     val externalRow = new GenericRow(converted)
     val encoder = RowEncoder(schema)
-    (inputRow: Array[String]) => {
-      var i = 0
-      while (i < schema.length) {
-        val data = inputRow(i)
-        converted(i) = if (data == null || data.isEmpty) null else conversionFunctions(i)(data)
-        i += 1
-      }
-      encoder.toRow(externalRow)
-    }
 //    (inputRow: Array[String]) => {
 //      var i = 0
 //      while (i < schema.length) {
 //        val data = inputRow(i)
-//        converted(i) = if ((data == null || data == nullString) ||
-//          (data.isEmpty && schema.fields(i).dataType != StringType)) {
-//          null
-//        }
-//        else if (data.isEmpty) {
-//          ""
-//        }
-//        else {
-//          conversionFunctions(i)(data)
-//        }
+//        converted(i) = if (data == null || data.isEmpty) null else conversionFunctions(i)(data)
 //        i += 1
 //      }
-//      encoder.createSerializer().apply(externalRow)
+//      encoder.toRow(externalRow)
 //    }
+    (inputRow: Array[String]) => {
+      var i = 0
+      while (i < schema.length) {
+        val data = inputRow(i)
+        converted(i) = if ((data == null || data == nullString) ||
+          (data.isEmpty && schema.fields(i).dataType != StringType)) {
+          null
+        }
+        else if (data.isEmpty) {
+          ""
+        }
+        else {
+          conversionFunctions(i)(data)
+        }
+        i += 1
+      }
+      encoder.createSerializer().apply(externalRow)
+    }
   }
 }
