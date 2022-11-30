@@ -41,6 +41,11 @@ rdf.load().show()
 # aws社区：https://github.com/spark-redshift-community/spark-redshift 使用sbt构建项目
 # 这里是maven构建
 mvn clean package -Dscope.type=provided     
+# main 使用的spark3
+# 如果需要spark2可以切换到spark2分支，执行build
+```
 
-# 默认使用spark2构建，也可以调整为spark3
+#### 特别注意
+```markdown
+* EMR 6.9.0之后,AWS对Spark Redshift Connector做了很多定制优化,谓词下推,unload支持parquet等，可以在EMR上直接使用。
 ```
