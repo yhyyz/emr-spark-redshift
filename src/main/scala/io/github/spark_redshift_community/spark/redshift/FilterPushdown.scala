@@ -28,8 +28,7 @@ private[redshift] object FilterPushdown {
   /**
    * Build a SQL WHERE clause for the given filters. If a filter cannot be pushed down then no
    * condition will be added to the WHERE clause. If none of the filters can be pushed down then
-   * an empty string will be returned.
-   *
+   * an empty string willbe returned.
    * @param schema the schema of the table being queried
    * @param filters an array of filters, the conjunction of which is the filter condition for the
    *                scan.
