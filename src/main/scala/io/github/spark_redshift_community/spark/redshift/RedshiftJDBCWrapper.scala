@@ -17,21 +17,21 @@
 
 package io.github.spark_redshift_community.spark.redshift
 
-import java.sql.{ResultSet, PreparedStatement, Connection, Driver, DriverManager, ResultSetMetaData, SQLException}
+import java.sql.{Connection, Driver, DriverManager, PreparedStatement, ResultSet, ResultSetMetaData, SQLException}
 import java.util.Properties
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.{ThreadFactory, Executors}
-
+import java.util.concurrent.{Executors, ThreadFactory}
 import scala.collection.JavaConverters._
 import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration.{Duration, DurationInt}
 import scala.util.Try
 import scala.util.control.NonFatal
-
 import org.apache.spark.SPARK_VERSION
 import org.apache.spark.sql.execution.datasources.jdbc.DriverRegistry
 import org.apache.spark.sql.types._
 import org.slf4j.LoggerFactory
+
+import scala.language.postfixOps
 
 /**
  * Shim which exposes some JDBC helper functions. Most of this code is copied from Spark SQL, with
@@ -52,6 +52,8 @@ private[redshift] class JDBCWrapper {
       }
     }
     ExecutionContext.fromExecutorService(Executors.newCachedThreadPool(threadFactory))
+//    ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(50,threadFactory))
+
   }
 
   /**
@@ -127,13 +129,14 @@ private[redshift] class JDBCWrapper {
       val future = Future[T](op(statement))(ec)
       try {
         Await.result(future, Duration.Inf)
+
       } catch {
         case e: SQLException =>
           // Wrap and re-throw so that this thread's stacktrace appears to the user.
           throw new SQLException("Exception thrown in awaitResult: ", e)
         case NonFatal(t) =>
           // Wrap and re-throw so that this thread's stacktrace appears to the user.
-          throw new Exception("Exception thrown in awaitResult: ", t)
+          throw new Exception("Exception notFatal thrown in awaitResult: ", t)
       }
     } catch {
       case e: InterruptedException =>
@@ -253,8 +256,10 @@ private[redshift] class JDBCWrapper {
           case StringType =>
             if (field.metadata.contains("maxlength")) {
               s"VARCHAR(${field.metadata.getLong("maxlength")})"
-            } else {
-              "TEXT"
+            } else if (field.metadata.contains("super")) {
+              "super"
+            }else {
+              "VARCHAR(65535)"
             }
           case TimestampType => "TIMESTAMP"
           case DateType => "DATE"

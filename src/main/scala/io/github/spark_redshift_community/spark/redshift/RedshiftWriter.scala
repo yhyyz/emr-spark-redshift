@@ -105,6 +105,8 @@ private[redshift] class RedshiftWriter(
 
     s"COPY ${params.table.get} ${columns}FROM '$fixedUrl' CREDENTIALS '$credsString' FORMAT AS " +
       s"${format} manifest ${params.extraCopyOptions}"
+//    s"COPY ${params.table.get} ${columns}FROM '$fixedUrl' iam_role '$credsString' FORMAT AS " +
+//      s"${format} manifest ${params.extraCopyOptions}"
   }
 
   /**

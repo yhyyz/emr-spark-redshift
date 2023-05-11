@@ -44,6 +44,8 @@ private[redshift] object AWSCredentialsUtils {
     }
     if (params.iamRole.isDefined) {
       s"aws_iam_role=${params.iamRole.get}"
+//      s"${params.iamRole.get}"
+
     } else if (params.temporaryAWSCredentials.isDefined) {
       awsCredsToString(params.temporaryAWSCredentials.get.getCredentials)
     } else if (params.forwardSparkS3Credentials) {
