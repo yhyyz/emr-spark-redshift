@@ -128,7 +128,6 @@ private[redshift] class JDBCWrapper {
     try {
       val future = Future[T](op(statement))(ec)
       try {
-//        Await.result(future, 600 seconds)
         Await.result(future, Duration.Inf)
 
       } catch {
@@ -257,7 +256,9 @@ private[redshift] class JDBCWrapper {
           case StringType =>
             if (field.metadata.contains("maxlength")) {
               s"VARCHAR(${field.metadata.getLong("maxlength")})"
-            } else {
+            } else if (field.metadata.contains("super")) {
+              "super"
+            }else {
               "VARCHAR(65535)"
             }
           case TimestampType => "TIMESTAMP"
