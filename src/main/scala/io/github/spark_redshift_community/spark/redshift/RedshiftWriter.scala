@@ -302,6 +302,11 @@ private[redshift] class RedshiftWriter(
           .option("escape", "\"")
           .option("nullValue", nullString)
           .option("compression", "gzip")
+      case "JSON" =>
+        writer.format("json")
+      case "JSON GZIP" =>
+        writer.format("json")
+          .option("compression", "gzip")
     }).save(tempDir)
 
     if (nonEmptyPartitions.value.isEmpty) {
