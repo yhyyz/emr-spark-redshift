@@ -43,7 +43,7 @@ private[redshift] object Parameters {
     "s3_endpoint" -> "s3.cn-north-1.amazonaws.com.cn"
   )
 
-  val VALID_TEMP_FORMATS = Set("AVRO", "CSV", "CSV GZIP")
+  val VALID_TEMP_FORMATS = Set("AVRO", "CSV", "CSV GZIP","JSON","JSON GZIP")
 
   /**
    * Merge user parameters with the defaults, preferring user parameters if specified

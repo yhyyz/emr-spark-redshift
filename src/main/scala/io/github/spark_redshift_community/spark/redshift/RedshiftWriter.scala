@@ -96,6 +96,7 @@ private[redshift] class RedshiftWriter(
     val format = params.tempFormat match {
       case "AVRO" => "AVRO 'auto'"
       case csv if csv == "CSV" || csv == "CSV GZIP" => csv + s" NULL AS '${params.nullString}'"
+      case json if json == "JSON" || json == "JSON GZIP" => json + s" 'auto ignorecase'"
     }
     val columns = if (params.includeColumnList) {
         "(" + schema.fieldNames.map(name => s""""$name"""").mkString(",") + ") "
